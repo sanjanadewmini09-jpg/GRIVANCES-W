@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lodge Grievance | RM CareConnect - RM Holdings (Pvt) Ltd</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-700 to-indigo-500 flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-indigo-200">
+            RM
+          </div>
+          <div>
+            <span class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 tracking-tight flex items-center gap-1.5">
+              RM Care<span class="text-indigo-600">Connect</span>
+            </span>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400 block -mt-1">RM Holdings (Pvt) Ltd</span>
+          </div>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <a href="index.html" class="hover:text-indigo-600 transition">Home</a>
+          <a href="submit-grievance.html" class="text-indigo-600 font-semibold transition">Lodge Grievance</a>
+          <a href="track.html" class="hover:text-indigo-600 transition">Track Status</a>
+          <a href="ai-bot.html" class="hover:text-indigo-600 transition flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+            AI Assistant
+          </a>
+          <a href="policies.html" class="hover:text-indigo-600 transition">Policies & FAQs</a>
+          <a href="admin.html" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition">
+            HR / Admin
+          </a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <div class="user-auth-slot"></div>
+          <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1 text-sm font-medium">
+      <a href="index.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">Home</a>
+      <a href="submit-grievance.html" class="block px-3 py-2 rounded-lg bg-indigo-50 text-indigo-700 font-semibold">Lodge Grievance</a>
+      <a href="track.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">Track Complaint Status</a>
+      <a href="ai-bot.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">AI Grievance Chatbot</a>
+      <a href="policies.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">Company Policies & FAQs</a>
+      <a href="admin.html" class="block px-3 py-2 rounded-lg hover:bg-indigo-50 text-indigo-700 font-semibold">HR / Admin Dashboard</a>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 py-10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6">
+        <a href="index.html" class="hover:text-indigo-600">Home</a>
+        <span>/</span>
+        <span class="text-slate-900 font-medium">Lodge a Grievance</span>
+      </nav>
+
+      <!-- Urgent / Red Alert Banner (conditionally revealed or if urgent query param) -->
+      <div id="urgent-banner" class="hidden mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 flex items-start gap-4">
+        <span class="text-2xl">🚨</span>
+        <div>
+          <h4 class="font-bold text-sm text-rose-900">Urgent Escalation Mode Activated</h4>
+          <p class="text-xs text-rose-700 mt-1">
+            This grievance has been flagged with elevated priority. Once submitted, it bypasses regular queue and is dispatched directly to the RM Holdings Senior Ethics Committee and Managing Director within 2 hours.
+          </p>
+        </div>
+      </div>
+
+      <!-- Page Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
+            Submit a Formal Grievance
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            All disclosures are protected under RM Holdings Whistleblower Shield & ISO Labor Compliance.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="ai-bot.html" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-50 text-purple-700 border border-purple-200 text-xs font-semibold hover:bg-purple-100 transition">
+            <span>🤖</span> Need help drafting? Ask CareBot
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Layout: Form + Helper Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+        
+        <!-- Left: The Grievance Form -->
+        <div class="lg:col-span-8">
+          <form id="grievance-form" class="space-y-6 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+            
+            <!-- Anonymous Toggle Card -->
+            <div class="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-sm">
+                  🔒
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-900">Submit Anonymously?</h4>
+                  <p class="text-xs text-slate-600 mt-0.5">Your name, ID, and email will be completely concealed from HR.</p>
+                </div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                <input type="checkbox" id="anonymous-toggle" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+              </label>
+            </div>
+
+            <!-- Employee Info Fields (masked when anonymous) -->
+            <div id="personal-info-fields" class="grid grid-cols-1 sm:grid-cols-3 gap-4 transition-all duration-300">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Employee Name</label>
+                <input type="text" id="emp-name" placeholder="e.g. Kasun Perera" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Employee Email</label>
+                <input type="email" id="emp-email" placeholder="kasun.p@rmholdings.lk" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Employee ID</label>
+                <input type="text" id="emp-id" placeholder="e.g. RM-EMP-402" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              </div>
+            </div>
+
+            <hr class="border-slate-100">
+
+            <!-- Incident Classification -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Category *</label>
+                <select id="category-select" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option value="Harassment & Workplace Conduct">Harassment & Workplace Conduct</option>
+                  <option value="Payroll & Compensation">Payroll & Compensation</option>
+                  <option value="Health, Safety & Facilities">Health, Safety & Facilities</option>
+                  <option value="Workload & Hours">Workload & Hours</option>
+                  <option value="Ethics & Compliance">Ethics & Compliance (Whistleblower)</option>
+                  <option value="Policy & Growth">Appraisals & Policy Growth</option>
+                  <option value="General Grievance">Other General Grievance</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Department Affected *</label>
+                <select id="emp-dept" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                  <option value="Software & Digital Solutions">Software & Digital Solutions</option>
+                  <option value="Finance & Accounts">Finance & Accounts</option>
+                  <option value="Manufacturing & Facilities">Manufacturing & Facilities</option>
+                  <option value="Sales & Business Development">Sales & Business Development</option>
+                  <option value="Corporate HR & Admin">Corporate HR & Admin</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Severity Level *</label>
+                <select id="severity-select" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+                  <option value="Low">Low (Informal / Routine)</option>
+                  <option value="Medium" selected>Medium (Standard 48h SLA)</option>
+                  <option value="High">High (Direct HR Priority)</option>
+                  <option value="Critical">Critical (Immediate Board Alert)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Incident Specifics -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Date of Incident</label>
+                <input type="date" id="incident-date" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Location / Facility</label>
+                <input type="text" id="incident-location" placeholder="e.g. Colombo 03 Office, 4th Floor, or Sapugaskanda Plant" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Persons / Supervisors Involved (Optional)</label>
+              <input type="text" id="people-involved" placeholder="Names or Designations of individuals involved or witnesses" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <!-- Subject / Title -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Brief Subject / Headline *</label>
+              <input type="text" id="complaint-title" placeholder="Summarize your issue in one sentence" required class="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+            </div>
+
+            <!-- Detailed Description -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Detailed Narrative *</label>
+              <textarea id="description" rows="5" placeholder="Please provide specific details: What occurred? What was said or done? How did it affect you? Has this occurred before?" required class="w-full text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl p-4 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+            </div>
+
+            <!-- Desired Outcome -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">What Resolution Are You Seeking? (Desired Outcome)</label>
+              <textarea id="desired-outcome" rows="2" placeholder="e.g. Apology, payroll correction, department transfer, shift schedule adjustment, or formal disciplinary inquiry" class="w-full text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl p-3.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            </div>
+
+            <!-- Evidence Attachments (Drag & Drop Mock) -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Supporting Evidence (Screenshots, PDFs, Emails, Photos)</label>
+              <div id="file-drop-zone" class="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center cursor-pointer hover:border-indigo-400 hover:bg-slate-50/50 transition">
+                <input type="file" id="file-input" multiple class="hidden" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
+                <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-2 text-xl font-bold">
+                  📤
+                </div>
+                <p class="text-xs font-bold text-slate-800">Drag & drop files here, or <span class="text-indigo-600 underline">browse files</span></p>
+                <p class="text-[11px] text-slate-400 mt-1">Supports PDF, PNG, JPG up to 15MB. Encrypted and accessible only by assigned investigator.</p>
+              </div>
+              <div id="uploaded-files-list" class="mt-3 flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Submit Button and Assurance -->
+            <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="text-[11px] text-slate-500 flex items-center gap-2">
+                <span class="text-emerald-500 font-bold">✓</span>
+                Protected by Whistleblower Policy Section 4
+              </div>
+              <button type="submit" class="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5">
+                Submit Formal Grievance
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Policy & Guidance Sidebar -->
+        <div class="lg:col-span-4 space-y-6">
+          
+          <!-- AI Assistant Callout -->
+          <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 text-white relative overflow-hidden shadow-xl">
+            <div class="w-10 h-10 rounded-xl bg-white/20 text-indigo-200 flex items-center justify-center font-bold text-xl mb-3">
+              🤖
+            </div>
+            <h4 class="font-bold text-base font-heading">AI CareBot Assistance</h4>
+            <p class="text-xs text-indigo-200 mt-2 leading-relaxed">
+              If you aren't sure how to structure your complaint or want guidance on whether an issue can be settled informally, consult our AI assistant.
+            </p>
+            <a href="ai-bot.html" class="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs rounded-xl transition">
+              Open AI Chatbot →
+            </a>
+          </div>
+
+          <!-- Non-Retaliation Pledge -->
+          <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <div class="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider mb-2">
+              <span>🛡️</span> Zero Retaliation Guarantee
+            </div>
+            <h4 class="font-bold text-slate-900 text-sm font-heading">RM Holdings Pledge</h4>
+            <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+              RM Holdings (Pvt) Ltd strictly prohibits any form of retaliation, demotion, hostile actions, or negative performance appraisal against any employee who lodges a grievance in good faith.
+            </p>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+              <span>Policy Ref: SEC-202</span>
+              <a href="policies.html#anti-harassment" class="text-indigo-600 font-medium hover:underline">Learn more</a>
+            </div>
+          </div>
+
+          <!-- Expected Timeline -->
+          <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+            <h4 class="font-bold text-slate-900 text-sm font-heading">Resolution SLA Timeline</h4>
+            <div class="space-y-2.5 text-xs text-slate-600">
+              <div class="flex justify-between items-center pb-1.5 border-b border-slate-100">
+                <span class="font-medium">Initial HR Triage:</span>
+                <span class="font-bold text-indigo-600">&lt; 24 Hours</span>
+              </div>
+              <div class="flex justify-between items-center pb-1.5 border-b border-slate-100">
+                <span class="font-medium">Investigator Assigned:</span>
+                <span class="font-bold text-indigo-600">&lt; 48 Hours</span>
+              </div>
+              <div class="flex justify-between items-center pb-1.5 border-b border-slate-100">
+                <span class="font-medium">Inquiry Completed:</span>
+                <span class="font-bold text-indigo-600">5 - 7 Work Days</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="font-medium">Formal Resolution:</span>
+                <span class="font-bold text-emerald-600">7 - 10 Work Days</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Submission Success Modal -->
+  <div id="submission-success-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden animate-fade-in">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-emerald-100 text-center relative">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-3xl mx-auto mb-4 shadow-sm">
+        ✓
+      </div>
+      <h3 class="text-2xl font-extrabold text-slate-900 font-heading">Grievance Successfully Lodged!</h3>
+      <p class="text-xs text-slate-500 mt-1">Your case has been recorded in the RM CareConnect secure registry.</p>
+
+      <!-- Reference Code Box -->
+      <div class="my-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Your Tracking Reference Code</span>
+        <div class="flex items-center justify-center gap-2">
+          <span id="modal-ref-id" class="text-2xl sm:text-3xl font-mono font-extrabold text-indigo-600 tracking-wider">RMC-2026-XXXX</span>
+          <button onclick="copyTrackingId()" title="Copy Code" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-500 mt-2">Please save this reference code. You can use it to track your case status and review HR responses at any time.</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-xs text-left mb-6 p-3 bg-indigo-50/50 rounded-xl">
+        <div>
+          <span class="text-slate-400 block text-[10px]">Submission Date:</span>
+          <span id="modal-submit-date" class="font-bold text-slate-800">Today</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px]">Initial Status:</span>
+          <span id="modal-status" class="font-bold text-amber-600">Pending Triage</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a id="modal-track-link" href="track.html" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition text-center">
+          Track Grievance Status Now →
+        </a>
+        <a href="index.html" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition text-center">
+          Return to Home
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 text-slate-400 text-xs py-8 mt-auto border-t border-slate-800">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2026 RM Holdings (Pvt) Ltd. All rights reserved. RM CareConnect Employee Platform.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/submit.js"></script>
+</body>
+</html>

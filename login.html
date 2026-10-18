@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In & Registration | RM CareConnect - RM Holdings (Pvt) Ltd</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-700 to-indigo-500 flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-indigo-200">
+            RM
+          </div>
+          <div>
+            <span class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 tracking-tight flex items-center gap-1.5">
+              RM Care<span class="text-indigo-600">Connect</span>
+            </span>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400 block -mt-1">RM Holdings (Pvt) Ltd</span>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-4 text-xs font-medium">
+          <a href="index.html" class="text-slate-600 hover:text-indigo-600">← Back to Portal Home</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dual Pane Auth Container -->
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-8">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 min-h-[580px]">
+      
+      <!-- Left Visual Side -->
+      <div class="md:col-span-5 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-8 flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 mix-blend-overlay">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Workplace Collaboration" class="w-full h-full object-cover">
+        </div>
+
+        <div class="relative z-10">
+          <span class="text-indigo-400 font-bold uppercase tracking-wider text-[10px] block mb-2">Secure Employee Access</span>
+          <h2 class="text-2xl font-extrabold font-heading leading-tight">
+            Fairness. Transparency. Non-Retaliation.
+          </h2>
+          <p class="text-xs text-indigo-200 mt-3 leading-relaxed">
+            Log in to manage your grievances, track investigator progress, or access management resolution tools.
+          </p>
+        </div>
+
+        <!-- 1-Click Demo Profiles (For Instant Testing) -->
+        <div class="relative z-10 pt-6 border-t border-slate-800 space-y-2">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">⚡ 1-Click Quick Demo Sign In:</p>
+          
+          <button onclick="quickLogin('employee')" class="w-full text-left p-2.5 rounded-xl bg-slate-800/80 hover:bg-indigo-600/50 border border-slate-700 transition flex items-center gap-2.5 text-xs">
+            <span class="text-base">👤</span>
+            <div>
+              <p class="font-bold text-white leading-none">Kasun Perera</p>
+              <p class="text-[10px] text-slate-400">Employee &bull; Logistics & Supply</p>
+            </div>
+          </button>
+
+          <button onclick="quickLogin('hr')" class="w-full text-left p-2.5 rounded-xl bg-slate-800/80 hover:bg-indigo-600/50 border border-slate-700 transition flex items-center gap-2.5 text-xs">
+            <span class="text-base">👩‍💼</span>
+            <div>
+              <p class="font-bold text-white leading-none">Anoma Fernando</p>
+              <p class="text-[10px] text-slate-400">Manager &bull; Senior HRBP</p>
+            </div>
+          </button>
+
+          <button onclick="quickLogin('admin')" class="w-full text-left p-2.5 rounded-xl bg-slate-800/80 hover:bg-indigo-600/50 border border-slate-700 transition flex items-center gap-2.5 text-xs">
+            <span class="text-base">⚖️</span>
+            <div>
+              <p class="font-bold text-white leading-none">Rajitha Mendis</p>
+              <p class="text-[10px] text-slate-400">Managing Director & Ethics</p>
+            </div>
+          </button>
+        </div>
+
+        <div class="relative z-10 pt-4 text-[10px] text-slate-500">
+          Whistleblower identity encryption is enabled by default.
+        </div>
+      </div>
+
+      <!-- Right Form Side -->
+      <div class="md:col-span-7 p-6 sm:p-10 flex flex-col justify-center">
+        
+        <!-- Auth Tabs: Login vs Register -->
+        <div class="flex items-center gap-4 border-b border-slate-200 pb-3 mb-6">
+          <button id="tab-login-btn" onclick="toggleAuthTab('login')" class="font-bold text-sm text-indigo-600 pb-1 border-b-2 border-indigo-600">
+            Sign In
+          </button>
+          <button id="tab-register-btn" onclick="toggleAuthTab('register')" class="font-semibold text-sm text-slate-400 hover:text-slate-600 pb-1">
+            Create Account
+          </button>
+        </div>
+
+        <!-- 1. Login Form -->
+        <form id="login-form" class="space-y-4" onsubmit="handleManualLogin(event)">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Corporate Email Address</label>
+            <input type="email" id="login-email" placeholder="e.g. kasun.p@rmholdings.lk" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+              <a href="#" onclick="CareConnectStore.showToast('Please contact your HR administrator for password resets.', 'info')" class="text-[11px] text-indigo-600 hover:underline">Forgot password?</a>
+            </div>
+            <input type="password" id="login-password" placeholder="••••••••" required value="rmcareconnect2026" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="remember-me" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+            <label for="remember-me" class="text-xs text-slate-600">Keep me logged in on this browser</label>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5">
+            Sign In to RM CareConnect
+          </button>
+        </form>
+
+        <!-- 2. Register Form (Hidden by default) -->
+        <form id="register-form" class="space-y-4 hidden" onsubmit="handleManualRegister(event)">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Full Name *</label>
+            <input type="text" id="reg-name" placeholder="e.g. Ruwan Wickramasinghe" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email *</label>
+              <input type="email" id="reg-email" placeholder="ruwan.w@rmholdings.lk" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Employee ID *</label>
+              <input type="text" id="reg-id" placeholder="e.g. RM-EMP-712" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Department *</label>
+            <select id="reg-dept" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+              <option value="Software & Digital Solutions">Software & Digital Solutions</option>
+              <option value="Finance & Accounts">Finance & Accounts</option>
+              <option value="Manufacturing & Facilities">Manufacturing & Facilities</option>
+              <option value="Sales & Business Development">Sales & Business Development</option>
+              <option value="Corporate HR & Admin">Corporate HR & Admin</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Create Password *</label>
+            <input type="password" id="reg-password" placeholder="At least 6 characters" required class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition transform hover:-translate-y-0.5">
+            Create Employee Account
+          </button>
+        </form>
+
+        <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+          <p class="text-xs text-slate-500">Want to report without an account?</p>
+          <a href="submit-grievance.html?anon=true" class="text-xs font-bold text-purple-600 hover:underline mt-1 inline-block">
+            Lodge 100% Anonymous Whistleblower Grievance →
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    function toggleAuthTab(tab) {
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const tabLoginBtn = document.getElementById('tab-login-btn');
+      const tabRegisterBtn = document.getElementById('tab-register-btn');
+
+      if (tab === 'login') {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        tabLoginBtn.className = "font-bold text-sm text-indigo-600 pb-1 border-b-2 border-indigo-600";
+        tabRegisterBtn.className = "font-semibold text-sm text-slate-400 hover:text-slate-600 pb-1";
+      } else {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        tabRegisterBtn.className = "font-bold text-sm text-indigo-600 pb-1 border-b-2 border-indigo-600";
+        tabLoginBtn.className = "font-semibold text-sm text-slate-400 hover:text-slate-600 pb-1";
+      }
+    }
+
+    function quickLogin(role) {
+      if (role === 'employee') {
+        CareConnectStore.setUser({
+          name: "Kasun Perera",
+          email: "kasun.p@rmholdings.lk",
+          id: "RM-EMP-402",
+          role: "employee",
+          department: "Logistics & Supply Chain",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+        });
+        CareConnectStore.showToast("Logged in as Kasun Perera (Employee)", "success");
+        setTimeout(() => window.location.href = "track.html", 600);
+      } else if (role === 'hr') {
+        CareConnectStore.setUser({
+          name: "Anoma Fernando",
+          email: "anoma.f@rmholdings.lk",
+          id: "RM-HR-101",
+          role: "hr",
+          department: "Corporate HR & Admin",
+          avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"
+        });
+        CareConnectStore.showToast("Logged in as Anoma Fernando (Senior HRBP)", "success");
+        setTimeout(() => window.location.href = "admin.html", 600);
+      } else if (role === 'admin') {
+        CareConnectStore.setUser({
+          name: "Rajitha Mendis",
+          email: "rajitha.m@rmholdings.lk",
+          id: "RM-EXEC-01",
+          role: "admin",
+          department: "Executive Board & Ethics",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+        });
+        CareConnectStore.showToast("Logged in as Rajitha Mendis (Managing Director)", "success");
+        setTimeout(() => window.location.href = "admin.html", 600);
+      }
+    }
+
+    function handleManualLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const isHR = email.includes('hr') || email.includes('admin') || email.includes('anoma') || email.includes('rajitha');
+      const name = email.split('@')[0].replace('.', ' ').toUpperCase();
+
+      CareConnectStore.setUser({
+        name: name || "RM Employee",
+        email: email,
+        id: "RM-EMP-CUSTOM",
+        role: isHR ? "hr" : "employee",
+        department: isHR ? "Corporate HR" : "General Operations",
+        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
+      });
+
+      CareConnectStore.showToast(`Welcome back, ${name}!`, "success");
+      setTimeout(() => {
+        window.location.href = isHR ? "admin.html" : "track.html";
+      }, 600);
+    }
+
+    function handleManualRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const id = document.getElementById('reg-id').value.trim();
+      const dept = document.getElementById('reg-dept').value;
+
+      CareConnectStore.setUser({
+        name: name,
+        email: email,
+        id: id,
+        role: "employee",
+        department: dept,
+        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
+      });
+
+      CareConnectStore.showToast(`Account created for ${name}!`, "success");
+      setTimeout(() => {
+        window.location.href = "track.html";
+      }, 600);
+    }
+  </script>
+</body>
+</html>

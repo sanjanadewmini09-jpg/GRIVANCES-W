@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HR & Admin Command Dashboard | RM CareConnect - RM Holdings (Pvt) Ltd</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased flex flex-col min-h-screen">
+
+  <!-- Admin Top Bar -->
+  <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+    <div class="container mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-bold text-white uppercase tracking-wider text-[11px]">RM Holdings HR Management Console</span>
+        <span class="text-slate-500">|</span>
+        <span class="text-slate-400">Strictly Confidential & Governed by Whistleblower Charter</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400">Active View:</span>
+        <select id="role-quick-switcher" class="bg-slate-800 text-indigo-300 border border-slate-700 rounded px-2 py-1 text-xs focus:outline-none" onchange="switchAdminProfile(this.value)">
+          <option value="anoma">Anoma Fernando (Senior HRBP)</option>
+          <option value="rajitha">Rajitha Mendis (Ethics / Managing Director)</option>
+          <option value="chaminda">Chaminda Silva (Safety Director)</option>
+        </select>
+        <button onclick="printDossier()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded text-xs transition flex items-center gap-1">
+          🖨️ Print Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-700 to-indigo-500 flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-indigo-200">
+            RM
+          </div>
+          <div>
+            <span class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 tracking-tight flex items-center gap-1.5">
+              RM Care<span class="text-indigo-600">Connect</span>
+            </span>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-indigo-600 block -mt-1">Manager & HR Control Center</span>
+          </div>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <a href="index.html" class="hover:text-indigo-600 transition">Portal Home</a>
+          <a href="admin.html" class="text-indigo-600 font-semibold transition">Grievances Overview</a>
+          <a href="submit-grievance.html" class="hover:text-indigo-600 transition">Log Case</a>
+          <a href="track.html" class="hover:text-indigo-600 transition">Employee View</a>
+          <a href="policies.html" class="hover:text-indigo-600 transition">HR Protocols</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <div class="user-auth-slot"></div>
+          <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1 text-sm font-medium">
+      <a href="index.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">Portal Home</a>
+      <a href="admin.html" class="block px-3 py-2 rounded-lg bg-indigo-50 text-indigo-700 font-semibold">HR & Admin Console</a>
+      <a href="submit-grievance.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">Lodge Grievance</a>
+      <a href="track.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">Track Complaint Status</a>
+      <a href="ai-bot.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">AI Grievance Assistant</a>
+      <a href="policies.html" class="block px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700">Policies & SLAs</a>
+    </div>
+  </header>
+
+  <!-- Admin Body Content -->
+  <main class="flex-1 py-8">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl space-y-8">
+
+      <!-- Welcome Banner & Quick Action Buttons -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+        <div class="flex items-center gap-4">
+          <img id="admin-avatar" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="HR Officer" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-indigo-500/20">
+          <div>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 font-heading">
+              Grievance Operations Command
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Welcome back, <strong id="admin-name" class="text-indigo-600 font-bold">Anoma Fernando</strong> &bull; Senior HR Business Partner & Lead Arbiter
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="submit-grievance.html" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+            <span>+</span> Record Walk-in Grievance
+          </a>
+          <button onclick="CareConnectStore.showToast('Data synced with central local database.', 'info')" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">
+            🔄 Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Executive Metrics (5 Cards) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        
+        <!-- Total -->
+        <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between text-slate-400 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider">Total Cases</span>
+            <span class="text-lg">📁</span>
+          </div>
+          <span id="stat-total" class="text-3xl font-extrabold text-slate-900 font-heading">0</span>
+          <p class="text-[11px] text-slate-500 mt-1">Logged to date</p>
+        </div>
+
+        <!-- Pending Triage -->
+        <div class="p-5 rounded-2xl bg-white border border-amber-200 shadow-sm">
+          <div class="flex items-center justify-between text-amber-500 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Pending Triage</span>
+            <span class="text-lg">⏳</span>
+          </div>
+          <span id="stat-pending" class="text-3xl font-extrabold text-amber-600 font-heading">0</span>
+          <p class="text-[11px] text-amber-700 mt-1">Requires assignment</p>
+        </div>
+
+        <!-- In Investigation -->
+        <div class="p-5 rounded-2xl bg-white border border-indigo-200 shadow-sm">
+          <div class="flex items-center justify-between text-indigo-500 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-700">In Investigation</span>
+            <span class="text-lg">🔍</span>
+          </div>
+          <span id="stat-investigating" class="text-3xl font-extrabold text-indigo-600 font-heading">0</span>
+          <p class="text-[11px] text-indigo-700 mt-1">Fact-finding underway</p>
+        </div>
+
+        <!-- High Severity / Escalated -->
+        <div class="p-5 rounded-2xl bg-white border border-rose-200 shadow-sm">
+          <div class="flex items-center justify-between text-rose-500 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-rose-700">Escalated</span>
+            <span class="text-lg">🚨</span>
+          </div>
+          <span id="stat-escalated" class="text-3xl font-extrabold text-rose-600 font-heading">0</span>
+          <p class="text-[11px] text-rose-700 mt-1">High severity / Board</p>
+        </div>
+
+        <!-- Resolved -->
+        <div class="p-5 rounded-2xl bg-white border border-emerald-200 shadow-sm col-span-2 sm:col-span-1">
+          <div class="flex items-center justify-between text-emerald-500 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Resolved</span>
+            <span class="text-lg">✅</span>
+          </div>
+          <span id="stat-resolved" class="text-3xl font-extrabold text-emerald-600 font-heading">0</span>
+          <p class="text-[11px] text-emerald-700 mt-1">Corrective action taken</p>
+        </div>
+
+      </div>
+
+      <!-- Visual Analytics & Charts Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Category Distribution Doughnut -->
+        <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-slate-900 text-sm font-heading">Grievance Distribution by Category</h3>
+              <p class="text-[11px] text-slate-400">Incident breakdown across RM Holdings</p>
+            </div>
+            <span class="text-xs font-mono font-bold text-indigo-600">Chart.js</span>
+          </div>
+          <div class="relative flex-1 min-h-[220px]">
+            <canvas id="category-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Department Volume Bar Chart -->
+        <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-slate-900 text-sm font-heading">Grievances by Business Unit / Department</h3>
+              <p class="text-[11px] text-slate-400">Departmental health and reported friction</p>
+            </div>
+            <span class="text-xs font-mono font-bold text-indigo-600">Live Volume</span>
+          </div>
+          <div class="relative flex-1 min-h-[220px]">
+            <canvas id="dept-chart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Complaints Management Table Card -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        
+        <!-- Table Control Toolbar (Filters & Search) -->
+        <div class="p-6 border-b border-slate-200 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 class="font-bold text-slate-900 text-base font-heading">All Employee Grievances</h3>
+              <p class="text-xs text-slate-500">Filter, investigate, assign officers, and issue official resolutions</p>
+            </div>
+            <button onclick="resetFilters()" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold self-start sm:self-auto">
+              Reset Filters
+            </button>
+          </div>
+
+          <!-- Filter Controls Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Search Keywords</label>
+              <input type="text" id="filter-search" placeholder="Search by ID, Name, Keyword..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Status</label>
+              <select id="filter-status" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="all">All Statuses</option>
+                <option value="Pending">Pending Triage</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Under Investigation">Under Investigation</option>
+                <option value="Escalated">Escalated</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Department</label>
+              <select id="filter-dept" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="all">All Departments</option>
+                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                <option value="Software & Digital Solutions">Software & Digital Solutions</option>
+                <option value="Finance & Accounts">Finance & Accounts</option>
+                <option value="Manufacturing & Facilities">Manufacturing & Facilities</option>
+                <option value="Sales & Business Development">Sales & Business Development</option>
+                <option value="Corporate HR & Admin">Corporate HR & Admin</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Severity</label>
+              <select id="filter-severity" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="all">All Severities</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50/80 text-slate-500 uppercase tracking-wider text-[11px] font-bold border-b border-slate-200">
+                <th class="py-3 px-4">Case ID</th>
+                <th class="py-3 px-4">Subject & Category</th>
+                <th class="py-3 px-4">Complainant / Dept</th>
+                <th class="py-3 px-4">Severity</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4">Assigned Investigator</th>
+                <th class="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="complaints-table-body" class="divide-y divide-slate-100 text-xs">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Interactive Management Modal / Investigation Dossier Drawer -->
+  <div id="hr-details-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm hidden animate-fade-in overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 max-h-[92vh] overflow-y-auto relative">
+      
+      <!-- Close Button -->
+      <button onclick="closeDetailsModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-2xl font-bold leading-none">&times;</button>
+      
+      <!-- Modal Header -->
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-200">
+        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 font-mono font-bold text-sm rounded-lg" id="modal-id">RMC-2026-XXXX</span>
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900 font-heading" id="modal-title">Grievance Subject</h3>
+          <p class="text-xs text-slate-500">Submitted on <span id="modal-date">Date</span> &bull; Department: <span id="modal-department" class="font-medium text-slate-700">Dept</span></p>
+        </div>
+      </div>
+
+      <!-- 2-Column Dossier Content -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6">
+        
+        <!-- Left: Employee Statement, Evidence & Background -->
+        <div class="md:col-span-7 space-y-5 text-xs text-slate-700">
+          
+          <!-- Complainant Identity -->
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Complainant Profile</span>
+            <div id="modal-complainant-box">
+              <!-- Dynamic -->
+            </div>
+          </div>
+
+          <!-- Specifics -->
+          <div class="grid grid-cols-2 gap-3 p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Category</span>
+              <span id="modal-category" class="font-bold text-slate-900">Workload</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Location</span>
+              <span id="modal-location" class="font-medium text-slate-800">Colombo</span>
+            </div>
+            <div class="col-span-2">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Persons Involved</span>
+              <span id="modal-people" class="font-medium text-slate-800">Supervisor</span>
+            </div>
+          </div>
+
+          <!-- Narrative -->
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Employee's Statement</span>
+            <div id="modal-description" class="p-4 bg-slate-50 border border-slate-200 rounded-xl leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto">
+              Description here...
+            </div>
+          </div>
+
+          <!-- Desired Outcome -->
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Employee's Desired Remedy</span>
+            <div id="modal-desired" class="p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl text-indigo-950 font-medium">
+              Desired outcome...
+            </div>
+          </div>
+
+          <!-- Evidence Attachments -->
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Attached Evidence</span>
+            <div id="modal-evidence-files" class="space-y-1.5">
+              <!-- Files -->
+            </div>
+          </div>
+
+          <!-- Audit Timeline -->
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Investigation History</span>
+            <ul id="modal-timeline-container" class="space-y-1 pl-2">
+              <!-- Timeline -->
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Right: HR Actions (Assign, Status, Notes, Official Resolution) -->
+        <div class="md:col-span-5 space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+          <h4 class="font-bold text-slate-900 text-sm font-heading flex items-center gap-2">
+            <span>⚙️</span> Management Actions
+          </h4>
+
+          <!-- Assign Investigator Dropdown -->
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Assign Investigator / Arbiter *</label>
+            <select id="manage-assigned" class="w-full text-xs bg-white border border-slate-300 rounded-xl px-3 py-2.5 font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option value="Unassigned">Unassigned (Queue)</option>
+              <option value="Anoma Fernando (Senior HRBP)">Anoma Fernando (Senior HRBP)</option>
+              <option value="Chaminda Silva (Safety Director)">Chaminda Silva (Safety Director)</option>
+              <option value="Rajitha Mendis (Ethics Committee / Managing Director)">Rajitha Mendis (Managing Director / Ethics)</option>
+              <option value="Kavindi Alwis (Legal & Compliance Counsel)">Kavindi Alwis (Legal Counsel)</option>
+              <option value="External Independent Arbitrator">External Independent Arbitrator</option>
+            </select>
+          </div>
+
+          <!-- Status Dropdown -->
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Update Status *</label>
+            <select id="manage-status" class="w-full text-xs bg-white border border-slate-300 rounded-xl px-3 py-2.5 font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option value="Pending">Pending Triage</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Under Investigation">Under Investigation</option>
+              <option value="Escalated">Escalated to Board / Ethics</option>
+              <option value="Resolved">Resolved (Resolution Provided)</option>
+              <option value="Closed">Closed (Archived)</option>
+            </select>
+          </div>
+
+          <!-- HR Notes (Public to Employee) -->
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Investigation Progress Note</label>
+            <textarea id="manage-hr-notes" rows="3" placeholder="Inform the employee about ongoing fact-finding or meetings..." class="w-full text-xs bg-white border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+          </div>
+
+          <!-- Official Resolution (Shown when resolved) -->
+          <div>
+            <label class="block text-[11px] font-bold text-emerald-800 uppercase tracking-wider mb-1">Official Resolution & Corrective Action</label>
+            <textarea id="manage-resolution" rows="3" placeholder="Document the formal remedy offered (e.g. payout approved, policy clarification, supervisor transfer)..." class="w-full text-xs bg-white border border-emerald-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none"></textarea>
+          </div>
+
+          <!-- Confidential Internal Remarks (HR eyes only) -->
+          <div>
+            <label class="block text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-1">Confidential Internal Notes (HR Eyes Only)</label>
+            <textarea id="manage-confidential" rows="2" placeholder="Strictly confidential remarks, witness names, legal risks..." class="w-full text-xs bg-white border border-rose-200 rounded-xl p-3 focus:ring-2 focus:ring-rose-500 focus:outline-none"></textarea>
+            <span class="text-[10px] text-slate-400 mt-1 block">Not visible on employee tracking screen.</span>
+          </div>
+
+          <!-- Save Button -->
+          <div class="pt-2">
+            <button id="save-management-btn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5">
+              Save & Apply Changes
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 text-slate-400 text-xs py-8 mt-auto border-t border-slate-800">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2026 RM Holdings (Pvt) Ltd. All rights reserved. RM CareConnect HR Management Console.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    function switchAdminProfile(profile) {
+      if (profile === 'anoma') {
+        document.getElementById('admin-name').innerText = "Anoma Fernando";
+        document.getElementById('admin-avatar').src = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80";
+        CareConnectStore.setUser({
+          name: "Anoma Fernando",
+          email: "anoma.f@rmholdings.lk",
+          id: "RM-HR-101",
+          role: "hr",
+          department: "Corporate HR & Admin",
+          avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"
+        });
+      } else if (profile === 'rajitha') {
+        document.getElementById('admin-name').innerText = "Rajitha Mendis";
+        document.getElementById('admin-avatar').src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80";
+        CareConnectStore.setUser({
+          name: "Rajitha Mendis",
+          email: "rajitha.m@rmholdings.lk",
+          id: "RM-EXEC-01",
+          role: "admin",
+          department: "Executive Board & Ethics",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+        });
+      } else if (profile === 'chaminda') {
+        document.getElementById('admin-name').innerText = "Chaminda Silva";
+        document.getElementById('admin-avatar').src = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80";
+        CareConnectStore.setUser({
+          name: "Chaminda Silva",
+          email: "chaminda.s@rmholdings.lk",
+          id: "RM-OPS-08",
+          role: "hr",
+          department: "Safety & Operations",
+          avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+        });
+      }
+      renderUserBadge();
+      CareConnectStore.showToast(`Switched active manager view to ${document.getElementById('admin-name').innerText}`, 'info');
+    }
+  </script>
+</body>
+</html>
